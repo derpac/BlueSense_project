@@ -1,0 +1,37 @@
+
+%function[segmentedData] = data2Segmented(dataPath,dataStart,dataEnd,peakLength,smoothSize, peakThreshold, peakDistance,pos);
+% dataPathlist = ["D:\DERPAC\!university\Year 3\PROJECT\second-tests\Data\Serves\serves_data_17c.mat","D:\DERPAC\!university\Year 3\PROJECT\second-tests\Data\Serves\serves_data_17c.mat",...
+% "D:\DERPAC\!university\Year 3\PROJECT\third-tests\clears\clears_data_17c.mat","D:\DERPAC\!university\Year 3\PROJECT\third-tests\clears\clears_data_17c.mat"...
+% ,"D:\DERPAC\!university\Year 3\PROJECT\second-tests\Data\Smash\smash_data_17c.mat","D:\DERPAC\!university\Year 3\PROJECT\second-tests\Data\Smash\smash_data_17c.mat",...
+% "D:\DERPAC\!university\Year 3\PROJECT\second-tests\Data\FH-Flick\FH_flick_data_17c.mat","D:\DERPAC\!university\Year 3\PROJECT\second-tests\Data\BH-Flick\BH_flick_17c.mat"];
+% dataStartlist = [61.716,258.722,147.322,398.664,71.444,308.714,313.824,71.444];
+% dataEndlist = [243.468,397.288,363.026,581.654,283.698,560,446.65,283.698];
+% peakLengthlist = [500,500,500,500,500,500,500,500];
+% smoothSizelist = [100,100,100,100,100,100,100,100];
+% peakThresholdlist = [4000,10000,17000,17000,17000,17000,15000,15000];
+% peakDistancelist = [1000,1000,1000,1000,1000,1000,1000,1000];
+% poslist = [false,true,false,false,false,false,false,true];
+
+
+
+%%  compile total time stamps:
+
+function[timestamps] = findTimestamps(data, dstart, dend, threshold, distance, pos, showPlots)
+    dataRange = data(dstart:dend);
+    if pos == true
+        [pks, locs] = findpeaks(dataRange, 'MinPeakHeight', threshold, 'MinPeakDistance', distance);
+    else
+        [pks, locs] = findpeaks(-dataRange, 'MinPeakHeight', threshold, 'MinPeakDistance', distance);
+    end
+     if showPlots
+        figure;
+        plot(pos * dataRange - ~pos * dataRange);  % Clever way to flip if needed
+        hold on;
+        plot(locs, pks, 'ro', 'MarkerFaceColor', 'r');
+        title('Detected Peaks');
+        xlabel('Time/Samples');
+        ylabel('Amplitude');
+        legend('Data', 'Peaks');
+    end
+     timestamps = locs + dstart - 1;
+end

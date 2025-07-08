@@ -1,0 +1,57 @@
+%plot the accel and gyro of both sensors but first the data must be
+%analysed to identify where to start...
+
+%first plot col 1 against accels
+%M[35] 500Hz Acc (BW=184Hz) Gyro (BW=250Hz) Mag 100Hz x by the way
+
+sense1 = LOG87DBhand;   
+sense2 = LOG8557torso;     
+sense3 = LOG4065forearm;
+sense4 = LOG4007upperarm;
+
+
+% Sampling frequency and time step
+fs = 500;                 % Hz
+dt = 1 / fs;              % period
+
+% find total time for sensor 1 and sensor 2 with number of rows of tables
+time1 = (0:dt:(height(sense1)-1)*dt)'; % Time vector for sense1
+time2 = (0:dt:(height(sense2)-1)*dt)'; % Time vector for sense2
+time3 = (0:dt:(height(sense3)-1)*dt)';
+time4 = (0:dt:(height(sense4)-1)*dt)';
+
+% plot
+figure;
+subplot(4,1,1);
+plot(time1, sense1.gyro_y, 'r'); 
+title('Accel X - Sensor 1');
+xlabel('Time (s)');
+ylabel('Acceleration (m/s^2)');
+legend('Sensor 1', 'Sensor 2');
+grid on;
+%--------------------
+subplot(4,1,2);
+plot(time2, sense2.gyro_y, 'b'); 
+title('Accel X - Sensor 2');
+xlabel('Time (s)');
+ylabel('Acceleration (m/s^2)');
+legend('Sensor 1', 'Sensor 2');
+grid on;
+%-------------
+subplot(4,1,3);
+plot(time3, sense3.gyro_y, 'g'); 
+title('Accel X - Sensor 3');
+xlabel('Time (s)');
+ylabel('Acceleration (m/s^2)');
+legend('Sensor 1', 'Sensor 2');
+grid on;
+%--------------
+subplot(4,1,4);
+plot(time4, sense4.gyro_y, 'c');
+title('Accel X - Sensor 4');
+xlabel('Time (s)');
+ylabel('Acceleration (m/s^2)');
+legend('Sensor 1', 'Sensor 2');
+grid on;
+
+

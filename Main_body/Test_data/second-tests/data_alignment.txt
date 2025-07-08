@@ -1,0 +1,50 @@
+Data alignment times:
+
+
+Most tests>> hand: 87DB,  forearm: 4065,  torso: 8557,  upperarm: 3FCD
+
+------------------------------>
+
+Serves*: 
+	start-X: 
+	- hand: 42.822
+	- forearm: 29.286
+	- torso: 53.258
+	- upperarm: 54.732
+
+Smash:
+
+	start-X:
+	- hand:55.83
+	- forearm: 69.86
+	- torso: 61.252 	
+	- upperarm: 98.604
+FH-Flick:
+	
+	start-X:
+	- hand: 57.132
+	- forearm: 69.9 
+	- torso: 43.512
+	- upperarm: 30.078
+
+BH-Flick:
+	
+	start-X:
+	- hand: 80.66
+	- forearm:93.3
+	- torso: 69.86
+	- upperarm: 41.95
+
+Clears**:
+	
+	start-X
+	- hand: 147.322
+	- forearm: 161.474
+	- torso: 134.914
+	- upperarm: 120.198
+
+
+*Serves Only>> hand: 87DB,  forearm: 4065,  torso: 8557,  upperarm: 4007
+
+** third tests the next day.
+

@@ -1,0 +1,12 @@
+path = "D:\DERPAC\!university\Year 3\PROJECT\second-tests\Data\Serves\serves_data_17c.mat";
+start = round(61.716);
+dend = round(243.468);
+thresh = 7500;
+shotL = 500;
+smoothSize = 100;
+peakDist = 1000;
+pos = false;
+
+[segmented_short_serve,peakTimestamps] = data2Segmented(path,start,dend,shotL,smoothSize,thresh,peakDist,pos);
+save('PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps1', 'peakTimestamps')
+save('PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\segmented_short_serve','segmented_short_serve');

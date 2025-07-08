@@ -1,0 +1,195 @@
+%% define ranges
+
+r1 = round(243.468) - round(61.716);
+r2 = round(397.288) - round(258.722);
+r3 = round(363.026) - round(146.46);
+r4 = round(581.654) - round(398.664);
+r5 = round(283.698) - round(71.444);
+r6 = round(560) - round(308.714);
+r7 = round(446.65) - round(313.824);
+r8 = round(466.836) - round(331.934);
+
+%% define all 8 templates 
+% keep the templates equivilent to the shots used for SVM and KNN
+fullData = load('PROJECT\WLCSS_data_stream\final_datastream.mat');
+data = fullData.final_datastream;
+
+
+ds = 5;
+ss_t = [((25.128-0.5)/0.002)/ds:((25.128+0.5)/0.002)/ds];
+ls_t = [((232.238-0.5)/0.002)/ds:((232.238+0.5)/0.002)/ds];
+fcl_t = [((415.448-0.5)/0.002)/ds:((415.448+0.5)/0.002)/ds];
+bcl_t = [((616.746-0.5)/0.002)/ds:((616.746+0.5)/0.002)/ds];
+fsm_t = [((826.604-0.5)/0.002)/ds:((826.604+0.5)/0.002)/ds];
+bsm_t = [((1169.2-0.5)/0.002)/ds:((1169.2+0.5)/0.002)/ds];
+bhf_t = [((1251.67-0.5)/0.002)/ds:((1251.67+0.5)/0.002)/ds];
+fhf_t = [((1354.32-0.5)/0.002)/ds:((1354.32+0.5)/0.002)/ds];
+
+
+
+% %% assign timestamps to all shots
+% t1 = load("PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps1.mat");
+% t2 = load("PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps2.mat");
+% t3 = load("PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps3.mat");
+% t4 = load("PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps4.mat");
+% t5 = load("PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps5.mat");
+% t6 = load("PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps6.mat");
+% t7 = load("PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps7.mat");
+% t8 = load("PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps8.mat");
+% 
+% t1 = t1.peakTimestamps(:,1) - round(61.716);
+% t2 = t2.peakTimestamps(:,1) - round(258.722) + r1;
+% t3 = t3.peakTimestamps(:,1) - round(146.46) + r1+r2;
+% t4 = t4.peakTimestamps(:,1) - round(398.664) + r1+r2+r3;
+% t5 = t5.peakTimestamps(:,1) - round(71.444) + r1+r2+r3+r4;
+% t6 = t6.peakTimestamps(:,1) - round(308.714) + r1+r2+r3+r4+r5;
+% t7 = t7.peakTimestamps(:,1) - round(313.824) + r1+r2+r3+r4+r5+r6;
+% t8 = t8.peakTimestamps(:,1) - round(331.934) + r1+r2+r3+r4+r5+r6+r7;
+% allPeaks = [t1;t2;t3;t4;t5;t6;t7;t8]';
+% 
+% fs = 500;                 
+% dt = 1 / fs;
+
+%% --------------------------------
+
+dataTypes = {'short serve', 'long serve', 'fclear', 'bclear', 'fsmash', 'bsmash', 'fhflick', 'bhflick'};
+
+totalTimestamps = [];
+thresholds = [7500,15000,12000,12000,11500,27000,15000,20000];
+starts = [0,r1,r1+r2,r1+r2+r3,r1+r2+r3+r4,r1+r2+r3+r4+r5,r1+r2+r3+r4+r5+r6,r1+r2+r3+r4+r5+r6+r7];
+starts = (starts(1,:)/0.002) + 1;
+ends = [r1,r1+r2,r1+r2+r3,r1+r2+r3+r4,r1+r2+r3+r4+r5,r1+r2+r3+r4+r5+r6,r1+r2+r3+r4+r5+r6+r7,r1+r2+r3+r4+r5+r6+r7+r8];
+ends = (ends(1,:)/0.002) + 1;
+poss = [false,false,true,true,false,false,false,false];
+distance = 1000;
+showPlots = true;
+
+
+
+for i = 1:length(thresholds)
+
+    label = dataTypes{i};
+    locs = findTimestamps(data, starts(i), ends(i), thresholds(i), distance, poss(i), showPlots);
+    labeledTimestamps = [num2cell(locs(:)), repmat({label}, length(locs), 1)];
+
+
+    totalTimestamps = [totalTimestamps; labeledTimestamps];
+end
+
+
+
+template1 = data(totalTimestamps{2}-125:totalTimestamps{2}+125);
+template2 = data(totalTimestamps{35}-125:totalTimestamps{35}+125);
+template3 = data(totalTimestamps{65}-125:totalTimestamps{65}+125);
+template4 = data(totalTimestamps{123}-125:totalTimestamps{123}+125);
+template5 = data(totalTimestamps{178}-125:totalTimestamps{178}+125);
+template6 = data(totalTimestamps{205}-125:totalTimestamps{205}+125);
+template7 = data(totalTimestamps{245}-125:totalTimestamps{245}+125);
+template8 = data(totalTimestamps{278}-125:totalTimestamps{278}+125);
+
+
+%% plot ----------
+%time = (0:dt:(length(fullData.final_datastream)-1)*dt)';
+
+% figure;
+% plot(time,fullData.final_datastream);
+% hold on;
+% scatter(allPeaks,time);
+
+% %% ---- plot
+% % Convert peak times to indices
+% peakIndices = allPeaks / dt + 1;  % No rounding here
+% 
+% % Only keep peaks within bounds
+% validMask = peakIndices >= 1 & peakIndices <= length(fullData.final_datastream);
+% peakTimestamps = allPeaks(validMask); % match x-values
+% 
+% % Interpolate to get y-values at non-integer indices
+% peakValues = interp1(time, fullData.final_datastream, peakTimestamps, 'linear');
+% 
+% % Plot
+% figure;
+% plot(time, fullData.final_datastream, 'b'); 
+% hold on;
+% plot(peakTimestamps, peakValues, 'ro', 'MarkerFaceColor', 'r');
+% title('Detected Peaks on Full Combined Data Stream');
+% xlabel('Time (s)');
+% ylabel('Signal');
+% legend('Signal', 'Peaks');
+% grid on;
+
+%% define ranges with labels and shot count a-priori determined
+range1 = {0,r1,33,'short serve'};    % start, end, label 
+range2 = {r1,r1+r2, 30, 'long serve' };
+range3 = {r1+r2, r1+r2+r3, 58, 'fc clear'};
+range4 = {r1+r2+r3, r1+r2+r3+r4, 55,'bc clear'};
+range5 = {r1+r2+r3+r4, r1+r2+r3+r4+r5, 28,'fc smash'};
+range6 = {r1+r2+r3+r4+r5, r1+r2+r3+r4+r5+r6, 39,'bc smash'};
+range7 = {r1+r2+r3+r4+r5+r6, r1+r2+r3+r4+r5+r6+r7,33,'fhflick'};
+range8 = {r1+r2+r3+r4+r5+r6+r7, r1+r2+r3+r4+r5+r6+r7+r8,33,'bhflick'};
+total_shots = 309;
+tp_range = cell2mat(range1(1,1:3));
+tp = [];
+
+fp = [];
+
+
+%% check for positives with peaks
+for i = 1:length(peaks)
+    if peaks(i) > tp_range(1) && peaks(i) < tp_range(2)
+        tp = [tp,peaks(i)];
+    elseif peaks(i) < tp_range(1) || peaks(i) > tp_range(2)
+        fp = [fp,peaks(i)];
+    end
+end
+
+%% check for negatives 
+fn = tp_range(3) - length(tp); % gives number of false negatives
+tn = total_shots - length(tp) - length(fp) - fn;
+
+%% check for false positive location
+ranges = {range1, range2, range3, range4, range5, range6, range7, range8};
+fp_pos = {};
+for j = 1:length(fp)
+    for k = 1:length(ranges)
+        cur_range = ranges{k};
+        if fp(j) >= cur_range{1} && fp(j) <= cur_range{2}
+            fp_pos(end+1, :) = {fp(j), cur_range{4}}; % store fp value and label
+
+            break;
+        end
+    end
+end
+
+%% calculate %
+
+total_in_range = tp_range(3);
+
+tp_percent = (length(tp) / total_in_range)*100;
+
+
+
+
+%% confusion matrix generation
+
+TP = length(tp);
+FP = length(fp);
+FN = fn; % already computed
+TN = tn; % already computed
+
+% Confusion Matrix
+conf_matrix = [TP, FP; FN, TN];
+
+% Display raw numbers
+disp('Confusion Matrix:');
+disp(array2table(conf_matrix, ...
+    'VariableNames', {'Predicted_Positive', 'Predicted_Negative'}, ...
+    'RowNames', {'Actual_Positive', 'Actual_Negative'}));
+
+% ----- Metrics -----
+TPR = TP / (TP + FN);
+FNR = FN / (TP + FN);
+PPV = TP / (TP + FP);
+FDR = FP / (TP + FP);
+
+

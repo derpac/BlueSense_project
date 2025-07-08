@@ -1,0 +1,17 @@
+path = "D:\DERPAC\!university\Year 3\PROJECT\second-tests\Data\FH-Flick\FH_flick_data_17c.mat";
+start = round(313.824);
+dend = round(446.65);
+thresh = 15000;
+shotL = 500;
+smoothSize = 100;
+peakDist = 1000;
+pos = false;
+
+[segmented_fh_flick,peakTimestamps] = data2Segmented(path,start,dend,shotL,smoothSize,thresh,peakDist,pos);
+save('PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\timestamps7', 'peakTimestamps')
+save('PROJECT\matlab_classificationLA\Data_segmentation\TotalData_Final\segmented_fh_flick','segmented_fh_flick');
+%data2Segmented(dataPath,dataFileName,dataStart,dataEnd,sensorAxis,peakLength,smoothSize, peakThreshold, peakDistance)
+
+
+% for this segmentation the peaks are actually troughs and thus the data
+% must be -data.... 
